@@ -1,0 +1,22 @@
+version: '2'
+services:
+  db:
+    image: mysql:5.7
+    volumes:
+      - db_data:/var/lib/mysql:rw
+      - ./mysql:/docker-entrypoint-initdb.d/:ro
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+
+  web:
+    build: ./php
+    ports:
+      - "80:80"
+    volumes:
+      - ./sf:/var/www/sf
+    links:
+      - db:db
+
+volumes:
+  db_data:
