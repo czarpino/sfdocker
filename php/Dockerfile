@@ -18,6 +18,10 @@ RUN docker-php-ext-install soap
 RUN apt-get update && apt-get install -y libmagickwand-dev --no-install-recommends && rm -rf /var/lib/apt/lists/*
 RUN yes '' | pecl install imagick-beta
 
+# Install mcrypt
+RUN apt-get update -y && apt-get install -y libmcrypt-dev
+RUN docker-php-ext-install mcrypt
+
 # Install composer
 ADD composer-install.sh /usr/local/bin/composer-install.sh
 RUN /usr/local/bin/composer-install.sh && mv composer.phar /usr/bin/composer
@@ -40,4 +44,5 @@ RUN ln -s /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/rew
 RUN usermod -u 1000 www-data
 
 COPY bootstrap.sh /usr/local/bin/bootstrap.sh
+WORKDIR /var/www/sf
 CMD ["bootstrap.sh"]
